@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Know you Deeper</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #fceabb, #f8b500);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .app {
+      background: white;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+    .question {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+    textarea {
+      width: 100%;
+      height: 80px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      padding: 10px;
+      font-size: 1rem;
+      resize: none;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      background-color: #f8b500;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .summary {
+      white-space: pre-wrap;
+      margin-top: 1.5rem;
+      text-align: left;
+    }
+    .send-button {
+      background-color: #25d366;
+      margin-top: 1rem;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 1rem;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>✨ Know Me Deeply ✨</h1>
+    <div class="question" id="question"></div>
+    <textarea id="answer" placeholder="Your thoughts..."></textarea>
+    <br>
+    <button onclick="nextQuestion()">Next ➡️</button>
+    <div class="summary" id="summary"></div>
+    <input id="phoneNumber" type="text" placeholder="Enter recipient's WhatsApp number" />
+    <button id="sendButton" class="send-button" style="display:none" onclick="sendResponses()">📤 Send to Him</button>
+  </div>
+
+  <script>
+    const questions = [
+      "What makes you feel truly alive?",
+      "If you could understand one thing about yourself more deeply, what would it be?",
+      "Do you believe people are born inherently good? Why or why not?",
+      "What role does love play in your life?",
+      "What’s one memory that shaped who you are today?",
+      "Do you find more comfort in certainty or mystery?",
+      "What’s something about you most people don’t see?",
+      "How do you recharge emotionally?",
+      "If your soul could speak, what would it ask for right now?",
+      "What kind of connection do you crave the most?"
+    ];
+
+    let index = 0;
+    const answers = [];
+
+    function showQuestion() {
+      if (index < questions.length) {
+        document.getElementById('question').innerText = questions[index];
+        document.getElementById('answer').value = "";
+      } else {
+        showSummary();
+      }
+    }
+
+    function nextQuestion() {
+      const response = document.getElementById('answer').value.trim();
+      if (response) {
+        answers.push({ q: questions[index], a: response });
+        index++;
+        showQuestion();
+      } else {
+        alert("Please answer the question before moving on.");
+      }
+    }
+
+    function showSummary() {
+      const summaryDiv = document.getElementById('summary');
+      let output = "\nHere's what I learned about you:\n\n";
+      answers.forEach(pair => {
+        output += `👉 ${pair.q}\n❤️ ${pair.a}\n\n`;
+      });
+      summaryDiv.innerText = output;
+      document.getElementById('question').style.display = 'none';
+      document.getElementById('answer').style.display = 'none';
+      document.getElementById('phoneNumber').style.display = 'block';
+      document.getElementById('sendButton').style.display = 'inline-block';
+    }
+
+    function sendResponses() {
+      const recipientNumber = document.getElementById('phoneNumber').value.trim();
+      if (!recipientNumber) {
+        alert("Please enter a recipient's phone number.");
+        return;
+      }
+      const greeting = "Hi ❤️, I’ve finished answering the questions. Here’s a little piece of me:";
+      const summary = document.getElementById('summary').innerText;
+      const message = encodeURIComponent(`${greeting}\n\n${summary}`);
+      const url = `https://wa.me/${recipientNumber}?text=${message}`;
+      window.open(url, '_blank');
+    }
+
+    showQuestion();
+  </script>
+</body>
+<p>Copyright © [2025] WELS Company. All rights reserved.</p>
+</html>
