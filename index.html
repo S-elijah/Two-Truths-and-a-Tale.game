@@ -2,150 +2,598 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Know you Deeper</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Two Truths and a Tale | The understanding game</title>
+  <!-- Google Fonts & Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #fceabb, #f8b500);
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(145deg, #f9e7b3 0%, #f5bc70 100%);
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 100vh;
+      padding: 1.5rem;
+      margin: 0;
+      position: relative;
     }
-    .app {
-      background: white;
-      padding: 2rem;
-      border-radius: 20px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-      max-width: 400px;
+
+    /* animated grain texture (subtle) */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: radial-gradient(rgba(0,0,0,0.03) 1px, transparent 1px);
+      background-size: 24px 24px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* main card */
+    .game-card {
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(2px);
+      border-radius: 2.5rem;
+      box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0,0,0,0.05);
+      max-width: 620px;
+      width: 100%;
+      padding: 2rem 1.8rem;
+      transition: all 0.2s ease;
+      border: 1px solid rgba(255,245,210,0.7);
+      z-index: 2;
+    }
+
+    /* header area */
+    .brand {
       text-align: center;
+      margin-bottom: 1.5rem;
     }
-    h1 {
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
+    .brand h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #c45c1a, #f3a712);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      letter-spacing: -0.3px;
+      margin-bottom: 0.3rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
     }
-    .question {
-      font-size: 1.2rem;
-      margin-bottom: 1rem;
+    .brand h1 i {
+      background: none;
+      color: #e67e22;
+      font-size: 2rem;
+    }
+    .tagline {
+      color: #7b5a3b;
+      font-weight: 500;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+      border-top: 1px solid #ffe1aa;
+      display: inline-block;
+      padding-top: 6px;
+    }
+    .divider {
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #f7b42c, #f5a623, transparent);
+      width: 80px;
+      margin: 0.7rem auto 0;
+      border-radius: 4px;
+    }
+
+    /* progress area */
+    .progress-area {
+      margin: 1rem 0 1.2rem 0;
+    }
+    .counter-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #a05e1a;
+      margin-bottom: 6px;
+    }
+    .progress-bar-bg {
+      background: #f0e1c0;
+      border-radius: 40px;
+      height: 8px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #f3a712, #e67e22);
+      border-radius: 40px;
+      transition: width 0.25s ease;
+    }
+
+    /* question block */
+    .question-container {
+      transition: opacity 0.2s;
+    }
+    .question-text {
+      font-size: 1.6rem;
+      font-weight: 600;
+      line-height: 1.3;
+      color: #2c221b;
+      margin: 0.8rem 0 1rem 0;
+      padding-right: 0.5rem;
+    }
+    .answer-area {
+      margin: 1rem 0 1rem 0;
     }
     textarea {
       width: 100%;
-      height: 80px;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      padding: 10px;
+      border-radius: 1.5rem;
+      border: 1.5px solid #eed9b0;
+      padding: 1rem 1.2rem;
+      font-family: 'Inter', monospace;
       font-size: 1rem;
-      resize: none;
+      resize: vertical;
+      background: #fffef7;
+      transition: 0.2s;
+      outline: none;
+      font-weight: 400;
+    }
+    textarea:focus {
+      border-color: #f3a712;
+      box-shadow: 0 0 0 3px rgba(243, 167, 18, 0.2);
+    }
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 0.8rem;
+      justify-content: space-between;
     }
     button {
-      margin-top: 1rem;
-      padding: 10px 20px;
+      background: #f3bc5c;
       border: none;
-      border-radius: 10px;
-      background-color: #f8b500;
-      color: white;
-      font-size: 1rem;
+      padding: 0.8rem 1.4rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      font-size: 0.95rem;
       cursor: pointer;
+      transition: 0.2s;
+      color: #2e241d;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      flex: 1;
+      background: #fde5b4;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
-    .summary {
-      white-space: pre-wrap;
-      margin-top: 1.5rem;
-      text-align: left;
-    }
-    .send-button {
-      background-color: #25d366;
-      margin-top: 1rem;
-    }
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 1rem;
-      border-radius: 10px;
-      border: 1px solid #ccc;
+    button i {
       font-size: 1rem;
+    }
+    button.primary-btn {
+      background: #f3a712;
+      color: white;
+      box-shadow: 0 5px 12px rgba(243, 167, 18, 0.3);
+    }
+    button.primary-btn:hover {
+      background: #e69500;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 18px rgba(243, 167, 18, 0.3);
+    }
+    button.secondary-btn {
+      background: #f8efdb;
+      color: #b45f1b;
+    }
+    button.secondary-btn:hover {
+      background: #f3e5ce;
+      transform: translateY(-1px);
+    }
+    button:active {
+      transform: translateY(1px);
+    }
+    button:disabled {
+      opacity: 0.5;
+      transform: none;
+      cursor: not-allowed;
+    }
+
+    /* summary panel */
+    .summary-container {
+      margin-top: 0.8rem;
+      animation: fadeSlideUp 0.3s ease;
+    }
+    .summary-card {
+      background: #fef8ed;
+      border-radius: 1.8rem;
+      padding: 1.2rem;
+      max-height: 380px;
+      overflow-y: auto;
+      border: 1px solid #ffe1b3;
+      margin: 1rem 0;
+    }
+    .summary-text {
+      font-size: 0.9rem;
+      line-height: 1.55;
+      color: #3a2a1c;
+      white-space: pre-wrap;
+      font-weight: 500;
+    }
+    .share-area {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 0.8rem;
+    }
+    .whatsapp-input {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .whatsapp-input input {
+      flex: 2;
+      padding: 0.8rem 1rem;
+      border-radius: 2.5rem;
+      border: 1px solid #e2c99c;
+      font-family: 'Inter', monospace;
+      background: white;
+      outline: none;
+    }
+    .whatsapp-input input:focus {
+      border-color: #f3a712;
+    }
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .action-buttons button {
+      flex: 1;
+    }
+    .restart-btn {
+      background: #ecd9b4;
+      color: #6b3e12;
+    }
+    .hidden {
+      display: none;
+    }
+    .toast-msg {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #2c221b;
+      color: #ffecb3;
+      padding: 10px 20px;
+      border-radius: 60px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      z-index: 999;
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+      white-space: nowrap;
+      font-family: monospace;
+    }
+    footer {
+      text-align: center;
+      margin-top: 1.8rem;
+      font-size: 0.7rem;
+      color: #b4823a;
+      border-top: 1px dashed #f3dbaa;
+      padding-top: 1.2rem;
+    }
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(10px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    i.fa, i.far, i.fas {
+      pointer-events: none;
+    }
+    @media (max-width: 500px) {
+      .game-card { padding: 1.5rem; }
+      .question-text { font-size: 1.35rem; }
+      .brand h1 { font-size: 1.7rem; }
+      button { padding: 0.65rem 1rem; font-size: 0.85rem;}
     }
   </style>
 </head>
 <body>
-  <div class="app">
-    <h1>✨ Know Me Deeply ✨</h1>
-    <div class="question" id="question"></div>
-    <textarea id="answer" placeholder="Your thoughts..."></textarea>
-    <br>
-    <button onclick="nextQuestion()">Next ➡️</button>
-    <div class="summary" id="summary"></div>
-    <input id="phoneNumber" type="text" placeholder="Enter recipient's WhatsApp number" />
-    <button id="sendButton" class="send-button" style="display:none" onclick="sendResponses()">📤 Send to Him</button>
+
+<div class="game-card">
+  <div class="brand">
+    <h1>
+      <i class="fas fa-mask"></i> 
+      Two Truths & a Tale
+    </h1>
+    <div class="tagline">✨ share your truths · weave your story ✨</div>
+    <div class="divider"></div>
   </div>
 
-  <script>
-    const questions = [
-      "What makes you feel truly alive?",
-      "If you could understand one thing about yourself more deeply, what would it be?",
-      "Do you believe people are born inherently good? Why or why not?",
-      "What role does love play in your life?",
-      "What’s one memory that shaped who you are today?",
-      "Do you find more comfort in certainty or mystery?",
-      "What’s something about you most people don’t see?",
-      "How do you recharge emotionally?",
-      "If your soul could speak, what would it ask for right now?",
-      "What kind of connection do you crave the most?"
-    ];
+  <!-- Question Section (visible during game) -->
+  <div id="questionSection" class="question-container">
+    <div class="progress-area">
+      <div class="counter-info">
+        <span><i class="far fa-compass"></i> <span id="currentQNumber">1</span> / <span id="totalQ">10</span></span>
+        <span><i class="fas fa-heart"></i> soul journey</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+    <div class="question-text" id="questionText">
+      What makes you feel truly alive?
+    </div>
+    <div class="answer-area">
+      <textarea id="answerInput" rows="3" placeholder="Your honest truth... or a tale worth telling..."></textarea>
+    </div>
+    <div class="button-group">
+      <button id="prevBtn" class="secondary-btn" disabled><i class="fas fa-arrow-left"></i> Back</button>
+      <button id="nextBtn" class="primary-btn">Next <i class="fas fa-arrow-right"></i></button>
+    </div>
+  </div>
 
-    let index = 0;
-    const answers = [];
+  <!-- Summary + Share Section (hidden until finish) -->
+  <div id="summarySection" class="summary-container hidden">
+    <div style="text-align: center; margin-bottom: 0.3rem;">
+      <i class="fas fa-book-open" style="font-size: 1.8rem; color: #e67e22;"></i>
+      <h3 style="margin: 6px 0 0; font-weight: 700;">Your Tale Unfolds</h3>
+    </div>
+    <div class="summary-card">
+      <div class="summary-text" id="summaryText"></div>
+    </div>
+    <div class="share-area">
+      <div class="whatsapp-input">
+        <input type="text" id="phoneNumber" placeholder="+1234567890 (recipient WhatsApp)" value="">
+        <button id="sendWhatsAppBtn" class="primary-btn" style="background:#25D366; color:white;"><i class="fab fa-whatsapp"></i> Send</button>
+      </div>
+      <div class="action-buttons">
+        <button id="copySummaryBtn" class="secondary-btn"><i class="far fa-copy"></i> Copy summary</button>
+        <button id="restartGameBtn" class="restart-btn"><i class="fas fa-sync-alt"></i> Play again</button>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <i class="far fa-message"></i> deep connection starts with a tale · two truths inside every answer
+  </footer>
+</div>
+<div id="toastMessage" class="toast-msg"></div>
 
-    function showQuestion() {
-      if (index < questions.length) {
-        document.getElementById('question').innerText = questions[index];
-        document.getElementById('answer').value = "";
-      } else {
-        showSummary();
+<script>
+  // ======================= DEEP QUESTIONS (Two Truths & a Tale edition) ===================
+  const QUESTIONS = [
+    "What makes you feel truly alive?",
+    "If you could understand one thing about yourself more deeply, what would it be?",
+    "Do you believe people are born inherently good? Why or why not?",
+    "What role does love play in your life?",
+    "What’s one memory that shaped who you are today?",
+    "Do you find more comfort in certainty or mystery?",
+    "What’s something about you most people don’t see?",
+    "How do you recharge emotionally?",
+    "If your soul could speak, what would it ask for right now?",
+    "What kind of connection do you crave the most?"
+  ];
+  const TOTAL_QS = QUESTIONS.length;
+
+  // State
+  let currentIndex = 0;               // 0-based
+  let answersArray = new Array(TOTAL_QS).fill("");   // store each answer
+  let gameFinished = false;
+
+  // DOM elements
+  const questionSection = document.getElementById('questionSection');
+  const summarySection = document.getElementById('summarySection');
+  const questionTextEl = document.getElementById('questionText');
+  const answerInput = document.getElementById('answerInput');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const progressFill = document.getElementById('progressFill');
+  const currentQNumberSpan = document.getElementById('currentQNumber');
+  const totalQSpan = document.getElementById('totalQ');
+  const summaryTextDiv = document.getElementById('summaryText');
+  const phoneNumberInput = document.getElementById('phoneNumber');
+  const sendWhatsAppBtn = document.getElementById('sendWhatsAppBtn');
+  const copySummaryBtn = document.getElementById('copySummaryBtn');
+  const restartGameBtn = document.getElementById('restartGameBtn');
+
+  // Helper: show toast message
+  function showToast(msg, duration = 2000) {
+    const toast = document.getElementById('toastMessage');
+    toast.textContent = msg;
+    toast.style.opacity = '1';
+    setTimeout(() => {
+      toast.style.opacity = '0';
+    }, duration);
+  }
+
+  // Update progress bar + counter
+  function updateProgressUI() {
+    const percent = ((currentIndex + 1) / TOTAL_QS) * 100;
+    progressFill.style.width = `${percent}%`;
+    currentQNumberSpan.textContent = currentIndex + 1;
+    totalQSpan.textContent = TOTAL_QS;
+  }
+
+  // Load current question into textarea and update UI
+  function loadCurrentQuestion() {
+    if (gameFinished) return;
+    questionTextEl.textContent = QUESTIONS[currentIndex];
+    // load existing answer if any
+    answerInput.value = answersArray[currentIndex] || "";
+    updateProgressUI();
+    // update next button text: if last question show "Finish ✨"
+    if (currentIndex === TOTAL_QS - 1) {
+      nextBtn.innerHTML = 'Finish <i class="fas fa-check-circle"></i>';
+    } else {
+      nextBtn.innerHTML = 'Next <i class="fas fa-arrow-right"></i>';
+    }
+    // enable/disable previous button
+    prevBtn.disabled = (currentIndex === 0);
+  }
+
+  // Save current answer from textarea into answersArray
+  function saveCurrentAnswer() {
+    if (gameFinished) return;
+    const currentAnswer = answerInput.value.trim();
+    answersArray[currentIndex] = currentAnswer;
+  }
+
+  // Move to previous question
+  function goPrev() {
+    if (gameFinished) return;
+    if (currentIndex <= 0) return;
+    // save current before moving
+    saveCurrentAnswer();
+    currentIndex--;
+    loadCurrentQuestion();
+  }
+
+  // Finish game and build summary
+  function finishGameAndShowSummary() {
+    if (gameFinished) return;
+    // final save before finish
+    saveCurrentAnswer();
+    // check if all questions have non-empty answer? but not mandatory, but encourage: but we allow partial, but it's okay.
+    // generate summary text with beautiful formatting
+    let summaryContent = "🌟 *MY TRUTHS & TALE* 🌟\n";
+    summaryContent += "╔══════════════════════════════╗\n";
+    for (let i = 0; i < TOTAL_QS; i++) {
+      const q = QUESTIONS[i];
+      const ans = answersArray[i] && answersArray[i].trim() !== "" ? answersArray[i].trim() : "💭 (not answered yet)";
+      summaryContent += `\n📖 ${q}\n💬 ${ans}\n`;
+      if (i !== TOTAL_QS-1) summaryContent += `\n⋆⋅☆⋅⋆\n`;
+    }
+    summaryContent += "\n╚══════════════════════════════╝\n✨ shared via 'Two Truths and a Tale' — every answer holds a piece of the heart.";
+
+    summaryTextDiv.innerText = summaryContent;
+    // hide question section, show summary
+    questionSection.classList.add('hidden');
+    summarySection.classList.remove('hidden');
+    gameFinished = true;
+  }
+
+  // Next or Finish logic
+  function onNext() {
+    if (gameFinished) return;
+    // Validate current answer not empty (encourage depth)
+    const currentAnswerRaw = answerInput.value.trim();
+    if (currentAnswerRaw === "") {
+      showToast("✨ A little truth makes the tale shine. Please write your answer before proceeding.", 2300);
+      return;
+    }
+    // save current
+    saveCurrentAnswer();
+
+    // if last question -> finish game
+    if (currentIndex === TOTAL_QS - 1) {
+      finishGameAndShowSummary();
+    } else {
+      // move to next question
+      currentIndex++;
+      loadCurrentQuestion();
+    }
+  }
+
+  // Reset entire game to start fresh
+  function resetGame() {
+    // reset state
+    currentIndex = 0;
+    answersArray = new Array(TOTAL_QS).fill("");
+    gameFinished = false;
+    // hide summary, show question section
+    summarySection.classList.add('hidden');
+    questionSection.classList.remove('hidden');
+    // reset UI
+    loadCurrentQuestion();
+    answerInput.value = "";
+    // clear phone input field
+    if (phoneNumberInput) phoneNumberInput.value = "";
+    // additional UI reset if needed
+    showToast("New journey begins — share your truths and tale again!", 1800);
+  }
+
+  // Send via WhatsApp
+  function sendWhatsApp() {
+    let phone = phoneNumberInput.value.trim();
+    if (!phone) {
+      showToast("📱 Please enter a valid WhatsApp number (with country code).", 2000);
+      return;
+    }
+    // Remove any non-digit except '+'
+    let cleaned = phone.replace(/[^\d+]/g, '');
+    if (cleaned === "") {
+      showToast("Invalid phone number. Use format: +123456789", 2000);
+      return;
+    }
+    // get summary text (which is already formatted)
+    let summaryRaw = summaryTextDiv.innerText;
+    const headerMsg = `🎭 *Two Truths & a Tale* 🎭\nI played the understanding game — here is my story:\n\n`;
+    const fullMsg = headerMsg + summaryRaw;
+    const encodedMsg = encodeURIComponent(fullMsg);
+    // whatsapp url
+    const waUrl = `https://wa.me/${cleaned}?text=${encodedMsg}`;
+    window.open(waUrl, '_blank');
+    showToast("Opening WhatsApp... share your tale ✨", 1500);
+  }
+
+  // Copy summary to clipboard
+  function copySummaryToClipboard() {
+    const summaryRaw = summaryTextDiv.innerText;
+    const fullCopy = `🎭 Two Truths & a Tale — My journey 🎭\n\n${summaryRaw}`;
+    navigator.clipboard.writeText(fullCopy).then(() => {
+      showToast("📋 Summary copied! Share it with someone special.", 2000);
+    }).catch(() => {
+      showToast("Could not copy. Select manually.", 1500);
+    });
+  }
+
+  // Additional event to handle auto-save when typing? optional but we save on move
+  // but also when user leaves textarea? we already save on next/prev, but also can listen to blur
+  function attachAutoSave() {
+    answerInput.addEventListener('blur', () => {
+      if (!gameFinished) {
+        saveCurrentAnswer();
       }
-    }
+    });
+  }
 
-    function nextQuestion() {
-      const response = document.getElementById('answer').value.trim();
-      if (response) {
-        answers.push({ q: questions[index], a: response });
-        index++;
-        showQuestion();
-      } else {
-        alert("Please answer the question before moving on.");
-      }
-    }
+  // Initialize event listeners
+  function initEventListeners() {
+    prevBtn.addEventListener('click', goPrev);
+    nextBtn.addEventListener('click', onNext);
+    restartGameBtn.addEventListener('click', resetGame);
+    sendWhatsAppBtn.addEventListener('click', sendWhatsApp);
+    copySummaryBtn.addEventListener('click', copySummaryToClipboard);
+    attachAutoSave();
+  }
 
-    function showSummary() {
-      const summaryDiv = document.getElementById('summary');
-      let output = "\nHere's what I learned about you:\n\n";
-      answers.forEach(pair => {
-        output += `👉 ${pair.q}\n❤️ ${pair.a}\n\n`;
-      });
-      summaryDiv.innerText = output;
-      document.getElementById('question').style.display = 'none';
-      document.getElementById('answer').style.display = 'none';
-      document.getElementById('phoneNumber').style.display = 'block';
-      document.getElementById('sendButton').style.display = 'inline-block';
-    }
+  // On page load, set total questions text, load first question
+  function initGame() {
+    totalQSpan.textContent = TOTAL_QS;
+    currentQNumberSpan.textContent = 1;
+    loadCurrentQuestion();
+    initEventListeners();
+    // ensure phone input example placeholder
+    phoneNumberInput.placeholder = "+1234567890 (e.g., +14155552671)";
+    // make sure summary hidden initially
+    summarySection.classList.add('hidden');
+    questionSection.classList.remove('hidden');
+    gameFinished = false;
+    answersArray.fill("");
+    currentIndex = 0;
+    loadCurrentQuestion();
+  }
 
-    function sendResponses() {
-      const recipientNumber = document.getElementById('phoneNumber').value.trim();
-      if (!recipientNumber) {
-        alert("Please enter a recipient's phone number.");
-        return;
-      }
-      const greeting = "Hi ❤️, I’ve finished answering the questions. Here’s a little piece of me:";
-      const summary = document.getElementById('summary').innerText;
-      const message = encodeURIComponent(`${greeting}\n\n${summary}`);
-      const url = `https://wa.me/${recipientNumber}?text=${message}`;
-      window.open(url, '_blank');
-    }
-
-    showQuestion();
-  </script>
+  initGame();
+</script>
 </body>
-<p>Copyright © [2025] WELS Company. All rights reserved.</p>
 </html>
